@@ -339,12 +339,19 @@
         <!-- Theme -->
         <div class="space-y-1.5">
           <span class="text-xs font-semibold text-slate-600 block">تم رنگ کارت</span>
-          <div class="grid grid-cols-3 sm:grid-cols-5 gap-1.5" id="themeGroup">
-            <button type="button" data-theme="light" class="theme-btn px-2 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer">روشن</button>
-            <button type="button" data-theme="paper" class="theme-btn px-2 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer">کاغذی</button>
-            <button type="button" data-theme="charcoal" class="theme-btn px-2 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer">ذغالی</button>
-            <button type="button" data-theme="dim" class="theme-btn px-2 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer">سرمه‌ای</button>
-            <button type="button" data-theme="dark" class="theme-btn px-2 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer">مشکی</button>
+          <div class="grid grid-cols-3 sm:grid-cols-4 gap-1.5" id="themeGroup">
+            <button type="button" data-theme="light" class="theme-btn px-2 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer flex items-center justify-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-slate-300 shrink-0" style="background:#ffffff"></span>روشن</button>
+            <button type="button" data-theme="cream" class="theme-btn px-2 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer flex items-center justify-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-slate-300 shrink-0" style="background:#fdfbf7"></span>کرمی</button>
+            <button type="button" data-theme="paper" class="theme-btn px-2 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer flex items-center justify-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-amber-300 shrink-0" style="background:#f7f2e8"></span>کاغذی</button>
+            <button type="button" data-theme="sage" class="theme-btn px-2 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer flex items-center justify-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-emerald-300 shrink-0" style="background:#eef3ee"></span>مریم‌گلی</button>
+            <button type="button" data-theme="sky" class="theme-btn px-2 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer flex items-center justify-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-sky-300 shrink-0" style="background:#eff6ff"></span>آبی یخی</button>
+            <button type="button" data-theme="lavender" class="theme-btn px-2 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer flex items-center justify-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-violet-300 shrink-0" style="background:#f5f3ff"></span>یاسی</button>
+            <button type="button" data-theme="charcoal" class="theme-btn px-2 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer flex items-center justify-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-slate-500 shrink-0" style="background:#2d2d2d"></span>ذغالی</button>
+            <button type="button" data-theme="dim" class="theme-btn px-2 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer flex items-center justify-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-slate-500 shrink-0" style="background:#15202b"></span>سرمه‌ای</button>
+            <button type="button" data-theme="forest" class="theme-btn px-2 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer flex items-center justify-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-emerald-700 shrink-0" style="background:#0f241d"></span>زمردی</button>
+            <button type="button" data-theme="burgundy" class="theme-btn px-2 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer flex items-center justify-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-rose-800 shrink-0" style="background:#260f16"></span>زرشکی</button>
+            <button type="button" data-theme="espresso" class="theme-btn px-2 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer flex items-center justify-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-amber-900 shrink-0" style="background:#1f1815"></span>اسپرسو</button>
+            <button type="button" data-theme="dark" class="theme-btn px-2 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer flex items-center justify-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-slate-600 shrink-0" style="background:#000000"></span>مشکی</button>
           </div>
         </div>
       </div>
@@ -600,6 +607,62 @@
         logo: "#f2f2f2",
         trans: "#8ecae6",
         accent: "#60a5fa"
+      },
+      cream: {
+        bg: "#fdfbf7",
+        text: "#1c1917",
+        muted: "#78716c",
+        logo: "#1c1917",
+        trans: "#9f1239",
+        accent: "#be123c"
+      },
+      sage: {
+        bg: "#eef3ee",
+        text: "#1b2a22",
+        muted: "#566b5f",
+        logo: "#1b2a22",
+        trans: "#2d6a4f",
+        accent: "#2d6a4f"
+      },
+      sky: {
+        bg: "#eff6ff",
+        text: "#0f172a",
+        muted: "#475569",
+        logo: "#0f172a",
+        trans: "#0284c7",
+        accent: "#0284c7"
+      },
+      lavender: {
+        bg: "#f5f3ff",
+        text: "#1e1b4b",
+        muted: "#6d688a",
+        logo: "#1e1b4b",
+        trans: "#7c3aed",
+        accent: "#7c3aed"
+      },
+      forest: {
+        bg: "#0f241d",
+        text: "#ecfdf5",
+        muted: "#a7f3d0",
+        logo: "#ecfdf5",
+        trans: "#34d399",
+        accent: "#34d399"
+      },
+      burgundy: {
+        bg: "#260f16",
+        text: "#fdf2f4",
+        muted: "#d8a4b2",
+        logo: "#fdf2f4",
+        trans: "#fb7185",
+        accent: "#fb7185"
+      },
+      espresso: {
+        bg: "#1f1815",
+        text: "#f5ebe0",
+        muted: "#b5a397",
+        logo: "#f5ebe0",
+        trans: "#e09f3e",
+        accent: "#e09f3e"
       },
       dark: {
         bg: "#000000",
@@ -1484,7 +1547,7 @@
 
       document.querySelectorAll(".theme-btn").forEach(btn => {
         const active = btn.dataset.theme === state.theme;
-        btn.className = `theme-btn px-2 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer ${
+        btn.className = `theme-btn px-2 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer flex items-center justify-center gap-1.5 ${
           active ? "bg-slate-900 text-white border-slate-900" : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"
         }`;
       });
