@@ -3,14 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>استودیو کارت پست اینستاگرام — Ali Nazari</title>
-  <link rel="manifest" href="./manifest.json" />
-  <meta name="theme-color" content="#0f172a" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="کارت‌ساز" />
-  <link rel="apple-touch-icon" href="./icon-192.png" />
-  <link rel="icon" type="image/png" href="./icon-192.png" />
+  <title>قالب پست X برای اینستاگرام — Ali Nazari</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
@@ -193,11 +186,14 @@
     <section class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 space-y-5">
 
       <!-- Single Post Style Selector (Shown in Single Mode) -->
-      <div id="singleStyleBox" class="flex items-center justify-between gap-2 bg-slate-50 border border-slate-200 rounded-xl p-2.5">
-        <span class="text-xs font-bold text-slate-700">سبک قالب تک‌پست:</span>
-        <div class="flex items-center gap-1.5" id="singleStyleGroup">
-          <button type="button" data-style="x" class="single-style-btn px-3 py-1 rounded-lg text-xs font-semibold border transition cursor-pointer">قالب X (توییتر)</button>
-          <button type="button" data-style="editorial" class="single-style-btn px-3 py-1 rounded-lg text-xs font-semibold border transition cursor-pointer">استاندارد و حرفه‌ای</button>
+      <div id="singleStyleBox" class="space-y-2 bg-slate-50 border border-slate-200 rounded-xl p-2.5">
+        <span class="text-xs font-bold text-slate-700 block">سبک قالب تک‌پست:</span>
+        <div class="grid grid-cols-3 sm:grid-cols-5 gap-1.5" id="singleStyleGroup">
+          <button type="button" data-style="x" class="single-style-btn px-2 py-1.5 rounded-lg text-xs font-semibold border transition cursor-pointer">قالب X</button>
+          <button type="button" data-style="editorial" class="single-style-btn px-2 py-1.5 rounded-lg text-xs font-semibold border transition cursor-pointer">استاندارد</button>
+          <button type="button" data-style="quote" class="single-style-btn px-2 py-1.5 rounded-lg text-xs font-semibold border transition cursor-pointer">نقل‌قول</button>
+          <button type="button" data-style="frame" class="single-style-btn px-2 py-1.5 rounded-lg text-xs font-semibold border transition cursor-pointer">قاب‌دار</button>
+          <button type="button" data-style="minimal" class="single-style-btn px-2 py-1.5 rounded-lg text-xs font-semibold border transition cursor-pointer">مینیمال</button>
         </div>
       </div>
 
@@ -215,6 +211,15 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <input id="carouselAuthorInput" type="text" dir="auto" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 outline-none focus:border-slate-900" placeholder="نویسنده / منبع (مثلاً: استیون جی. گولد)" />
             <input id="carouselSubtitleInput" type="text" dir="auto" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-900 outline-none focus:border-slate-900" placeholder="قلاب یا زیرعنوان کوتاه (اختیاری)" />
+        <div class="space-y-1.5 pt-1">
+          <span class="text-[11px] font-semibold text-slate-600 block">ظاهر اسلاید کاور:</span>
+          <div class="grid grid-cols-4 gap-1.5" id="coverStyleGroup">
+            <button type="button" data-cover-style="classic" class="cover-style-btn px-2 py-1 rounded-lg text-[11px] font-semibold border transition cursor-pointer">کلاسیک</button>
+            <button type="button" data-cover-style="centered" class="cover-style-btn px-2 py-1 rounded-lg text-[11px] font-semibold border transition cursor-pointer">کتابی</button>
+            <button type="button" data-cover-style="magazine" class="cover-style-btn px-2 py-1 rounded-lg text-[11px] font-semibold border transition cursor-pointer">مجله‌ای</button>
+            <button type="button" data-cover-style="minimal" class="cover-style-btn px-2 py-1 rounded-lg text-[11px] font-semibold border transition cursor-pointer">مینیمال</button>
+          </div>
+        </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
           <div class="flex items-center justify-between gap-2">
             <label for="coverTitleSizeRange" class="text-[11px] font-semibold text-slate-600 shrink-0">اندازه عنوان: <span id="coverTitleSizeVal" class="text-slate-900">32px</span></label>
@@ -343,6 +348,8 @@
         <!-- Exportable Card Container (Fixed 600px reference width -> exact 1:1 proportions with 1080px PNG export) -->
         <div id="exportCard" class="relative w-[600px] shrink-0 shadow-xl transition-colors duration-200 flex flex-col justify-between box-border" style="background-color: #ffffff; color: #0f1419; transform-origin: top center;">
           <div id="cardGrainOverlay" class="hidden card-grain absolute inset-0 pointer-events-none z-10"></div>
+          <div id="cardFrameBorder" class="hidden pointer-events-none absolute inset-3.5 rounded-lg border z-10" style="border-color: rgba(128,128,128,0.28);"></div>
+          <div id="cardMinimalTopBar" class="hidden absolute top-0 left-0 right-0 h-1 z-10" style="background-color: #1d9bf0;"></div>
 
           <!-- Card Header (Always LTR like X.com) -->
           <div id="cardXHeader" class="flex items-center justify-between gap-3 header-font" dir="ltr">
@@ -378,11 +385,17 @@
             <span class="text-sm font-normal" style="color: #5b8ea6;">Show translation</span>
           </div>
 
-          <!-- Editorial Standard Header (For Editorial Single Mode) -->
+          <!-- Editorial Standard Header -->
           <div id="cardEditorialTop" class="hidden mb-2 flex items-center justify-between" dir="rtl">
-            <div class="w-10 h-1 rounded-full" style="background-color: #1d9bf0;"></div>
+            <div id="cardEditorialBar" class="w-10 h-1 rounded-full" style="background-color: #1d9bf0;"></div>
             <span id="cardEditorialQuoteMark" class="text-3xl leading-none font-serif opacity-25 select-none">❞</span>
           </div>
+          <!-- Frame Top Pill -->
+          <div id="cardFrameTopPill" class="hidden mb-3 flex justify-center">
+            <span id="cardFrameHandle" class="text-xs font-semibold px-3 py-0.5 rounded-full" style="background-color: rgba(128,128,128,0.12);">@falsafevarz</span>
+          </div>
+          <!-- Quote Hero Top Mark -->
+          <div id="cardQuoteTopMark" class="hidden mb-1 text-4xl leading-none font-serif select-none opacity-85" style="color: #1d9bf0;" dir="rtl">❝</div>
 
           <!-- Carousel Content Slide Title Pill -->
           <div id="cardCarouselTitleBar" class="hidden mt-3 mb-1 flex items-center justify-between gap-2 border-b pb-2" style="border-color: rgba(128,128,128,0.18);">
@@ -392,9 +405,13 @@
 
           <!-- Cover Slide Hero (Only on Slide 1 when Cover is enabled) -->
           <div id="cardCoverHero" class="hidden flex-1 flex flex-col justify-center items-start my-4 space-y-4" dir="rtl">
+            <div id="cardCoverTopTag" class="hidden text-xs font-semibold px-3 py-1 rounded-full" style="background-color: rgba(29,155,240,0.12); color: #1d9bf0;">@falsafevarz</div>
             <div id="cardCoverAccent" class="w-12 h-1.5 rounded-full" style="background-color: #1d9bf0;"></div>
-            <h2 id="cardCoverTitle" class="card-font text-2xl sm:text-4xl font-bold leading-snug break-words w-full"></h2>
-            <p id="cardCoverSubtitle" class="card-font text-base sm:text-lg opacity-80 leading-relaxed w-full"></p>
+            <div id="cardCoverTextWrap" class="w-full space-y-3">
+              <h2 id="cardCoverTitle" class="card-font text-2xl sm:text-4xl font-bold leading-snug break-words w-full"></h2>
+              <div id="cardCoverDivider" class="hidden w-full h-px" style="background-color: rgba(128,128,128,0.22);"></div>
+              <p id="cardCoverSubtitle" class="card-font text-base sm:text-lg opacity-80 leading-relaxed w-full"></p>
+            </div>
             <div id="cardCoverAuthorWrap" class="pt-2 flex items-center gap-2">
               <span id="cardCoverAuthor" class="card-font text-sm sm:text-base font-semibold px-3 py-1 rounded-full" style="background-color: rgba(29,155,240,0.12); color: #1d9bf0;"></span>
             </div>
@@ -464,6 +481,7 @@
     const state = {
       mode: "single",
       singleStyle: "x",
+      coverStyle: "classic",
       name: "Ali Nazari",
       handle: "@falsafevarz",
       avatar: DEFAULT_AVATAR,
@@ -609,7 +627,16 @@
       cardCarouselTitleBar: document.getElementById("cardCarouselTitleBar"),
       cardCarouselTitleSmall: document.getElementById("cardCarouselTitleSmall"),
       cardCarouselAuthorSmall: document.getElementById("cardCarouselAuthorSmall"),
+      cardFrameBorder: document.getElementById("cardFrameBorder"),
+      cardMinimalTopBar: document.getElementById("cardMinimalTopBar"),
+      cardFrameTopPill: document.getElementById("cardFrameTopPill"),
+      cardFrameHandle: document.getElementById("cardFrameHandle"),
+      cardQuoteTopMark: document.getElementById("cardQuoteTopMark"),
       cardCoverHero: document.getElementById("cardCoverHero"),
+      cardCoverTopTag: document.getElementById("cardCoverTopTag"),
+      cardCoverAccent: document.getElementById("cardCoverAccent"),
+      cardCoverTextWrap: document.getElementById("cardCoverTextWrap"),
+      cardCoverDivider: document.getElementById("cardCoverDivider"),
       cardCoverTitle: document.getElementById("cardCoverTitle"),
       cardCoverSubtitle: document.getElementById("cardCoverSubtitle"),
       cardCoverAuthorWrap: document.getElementById("cardCoverAuthorWrap"),
@@ -707,6 +734,7 @@
           lineHeight: state.lineHeight,
           padding: state.padding,
           singleStyle: state.singleStyle,
+          coverStyle: state.coverStyle,
           textAlign: state.textAlign,
           fontFamily: state.fontFamily,
           useGrain: state.useGrain,
@@ -1198,6 +1226,10 @@
         el.cardTranslationRow.classList.add("hidden");
         el.cardEditorialTop.classList.add("hidden");
         el.cardEditorialFooter.classList.add("hidden");
+        el.cardFrameBorder.classList.add("hidden");
+        el.cardMinimalTopBar.classList.add("hidden");
+        el.cardFrameTopPill.classList.add("hidden");
+        el.cardQuoteTopMark.classList.add("hidden");
 
         const slides = getSlides();
         if (state.currentSlideIdx >= slides.length) state.currentSlideIdx = slides.length - 1;
@@ -1241,6 +1273,7 @@
           el.cardBodyWrapper.classList.add("hidden");
           el.cardCarouselTitleBar.classList.add("hidden");
 
+          const cs = state.coverStyle || "classic";
           const ctSize = state.coverTitleSize || 32;
           const csSize = state.coverSubtitleSize || 18;
           el.cardCoverTitle.style.fontSize = `${ctSize}px`;
@@ -1254,6 +1287,27 @@
           el.cardCoverSubtitle.setAttribute("dir", state.dir);
           el.cardCoverAuthorWrap.classList.toggle("hidden", !slide.author);
           el.cardCoverAuthor.textContent = slide.author;
+          el.cardCoverAuthor.style.backgroundColor = `${t.accent}1f`;
+          el.cardCoverAuthor.style.color = t.accent;
+          el.cardCoverAccent.style.backgroundColor = t.accent;
+
+          el.cardCoverHero.className = "flex-1 flex flex-col justify-center my-4 space-y-4 " + (cs === "centered" ? "items-center text-center" : "items-start");
+          el.cardCoverHero.setAttribute("dir", state.dir);
+          el.cardCoverTitle.style.textAlign = cs === "centered" ? "center" : "start";
+          el.cardCoverSubtitle.style.textAlign = cs === "centered" ? "center" : "start";
+          el.cardCoverAccent.classList.toggle("hidden", cs === "magazine" || cs === "minimal");
+          el.cardCoverDivider.classList.toggle("hidden", cs !== "minimal");
+          el.cardCoverTopTag.classList.add("hidden");
+          el.cardCoverTopTag.textContent = state.handle || "@falsafevarz";
+          el.cardCoverTopTag.style.backgroundColor = `${t.accent}1f`;
+          el.cardCoverTopTag.style.color = t.accent;
+          if (cs === "magazine") {
+            el.cardCoverTextWrap.style.borderInlineStart = `4px solid ${t.accent}`;
+            el.cardCoverTextWrap.style.paddingInlineStart = "16px";
+          } else {
+            el.cardCoverTextWrap.style.borderInlineStart = "none";
+            el.cardCoverTextWrap.style.paddingInlineStart = "0px";
+          }
         } else {
           el.cardCoverHero.classList.add("hidden");
           el.cardBodyWrapper.classList.remove("hidden");
@@ -1278,21 +1332,31 @@
         }
         el.charCount.textContent = `${state.carouselText.length} کاراکتر (${toPersianNum(total)} اسلاید)`;
       } else {
-        // Single Mode
-        const isEditorial = state.singleStyle === "editorial";
-        el.cardXHeader.classList.toggle("hidden", isEditorial);
-        el.cardEditorialTop.classList.toggle("hidden", !isEditorial);
-        el.cardEditorialFooter.classList.toggle("hidden", !isEditorial);
+        // Single Mode (x, editorial, quote, frame, minimal)
+        const ss = state.singleStyle || "x";
+        const isX = ss === "x";
+        el.cardXHeader.classList.toggle("hidden", !isX);
+        el.cardEditorialTop.classList.toggle("hidden", ss !== "editorial");
+        el.cardFrameBorder.classList.toggle("hidden", ss !== "frame");
+        el.cardFrameTopPill.classList.add("hidden");
+        el.cardFrameHandle.textContent = state.handle || "@falsafevarz";
+        el.cardMinimalTopBar.classList.toggle("hidden", ss !== "minimal");
+        el.cardMinimalTopBar.style.backgroundColor = t.accent;
+        el.cardQuoteTopMark.classList.toggle("hidden", ss !== "quote");
+        el.cardQuoteTopMark.style.color = t.accent;
+
+        const showBottomFooter = (ss === "editorial" || ss === "quote" || ss === "frame" || ss === "minimal");
+        el.cardEditorialFooter.classList.toggle("hidden", !showBottomFooter);
         el.cardEditorialHandle.textContent = state.handle || "@falsafevarz";
-        el.cardEditorialName.textContent = state.name || "Ali Nazari";
+        el.cardEditorialName.textContent = (ss === "minimal") ? "" : (state.name || "Ali Nazari");
 
         el.cardCoverHero.classList.add("hidden");
         el.cardCarouselTitleBar.classList.add("hidden");
         el.cardCarouselFooter.classList.add("hidden");
         el.cardBodyWrapper.classList.remove("hidden");
-        el.singleBottomSpacer.classList.toggle("hidden", isEditorial);
+        el.singleBottomSpacer.classList.toggle("hidden", !isX);
 
-        el.cardTranslationRow.classList.toggle("hidden", isEditorial || !state.showTranslation);
+        el.cardTranslationRow.classList.toggle("hidden", !isX || !state.showTranslation);
         const transIcons = el.cardTranslationRow.querySelectorAll("svg, span");
         transIcons.forEach(node => { node.style.color = t.trans; });
 
@@ -1337,6 +1401,9 @@
       document.querySelectorAll(".single-style-btn").forEach(btn => {
       btn.addEventListener("click", () => { state.singleStyle = btn.dataset.style; renderCard(); });
     });
+    document.querySelectorAll(".cover-style-btn").forEach(btn => {
+      btn.addEventListener("click", () => { state.coverStyle = btn.dataset.coverStyle; renderCard(); });
+    });
 
     document.querySelectorAll(".ratio-btn").forEach(btn => {
         const active = btn.dataset.ratio === state.ratio;
@@ -1345,6 +1412,10 @@
         }`;
       });
 
+      document.querySelectorAll(".cover-style-btn").forEach(btn => {
+        const active = btn.dataset.coverStyle === (state.coverStyle || "classic");
+        btn.className = `cover-style-btn px-2 py-1 rounded-lg text-[11px] font-semibold border transition cursor-pointer ${active ? "bg-slate-900 text-white border-slate-900" : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"}`;
+      });
       document.querySelectorAll(".align-btn").forEach(btn => {
         const active = btn.dataset.align === state.textAlign;
         btn.className = `align-btn px-2.5 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer ${
@@ -1533,7 +1604,9 @@
 
       const t = THEMES[state.theme] || THEMES.light;
       const isCarousel = state.mode === "carousel";
-      const isEditorial = !isCarousel && state.singleStyle === "editorial";
+      const ss = state.singleStyle || "x";
+      const isX = !isCarousel && ss === "x";
+      const isEditorial = !isCarousel && !isX;
 
       const W = 1080;
       const S = W / 600; // Scale relative to 600px preview card
@@ -1564,9 +1637,9 @@
       }
 
       // Compute layout heights
-      const xHeaderH = (!isCarousel && !isEditorial) ? Math.round(56 * S) : 0;
-      const transH = (!isCarousel && !isEditorial && state.showTranslation) ? Math.round(36 * S) : 0;
-      const edTopH = isEditorial ? Math.round(44 * S) : 0;
+      const xHeaderH = isX ? Math.round(56 * S) : 0;
+      const transH = (isX && state.showTranslation) ? Math.round(36 * S) : 0;
+      const edTopH = (isEditorial && (ss === "editorial" || ss === "quote")) ? Math.round(46 * S) : 0;
       const edFootH = isEditorial ? Math.round(46 * S) : 0;
       const carFootH = isCarousel ? Math.round(62 * S) : 0;
 
@@ -1632,6 +1705,19 @@
           ctx.fillStyle = pat;
           ctx.fillRect(0, 0, W, H);
         }
+      }
+
+      if (!isCarousel && ss === "frame") {
+        const fInset = Math.round(14 * S);
+        ctx.save();
+        ctx.strokeStyle = t.text;
+        ctx.globalAlpha = 0.22;
+        ctx.lineWidth = Math.max(2, Math.round(1.5 * S));
+        ctx.strokeRect(fInset, fInset, W - fInset * 2, H - fInset * 2);
+        ctx.restore();
+      } else if (!isCarousel && ss === "minimal") {
+        ctx.fillStyle = t.accent;
+        ctx.fillRect(0, 0, W, Math.round(4 * S));
       }
 
       let topY = pad;
@@ -1738,20 +1824,31 @@
         }
       }
 
-      // 2. Draw Editorial Top (Single Editorial mode)
+      // 2. Draw Single Non-X Header (editorial, quote, frame, minimal)
       if (isEditorial) {
-        ctx.fillStyle = t.accent;
-        drawRoundRect(ctx, W - pad - Math.round(40 * S), topY + Math.round(10 * S), Math.round(40 * S), Math.round(4 * S), Math.round(2 * S));
-        ctx.fill();
+        if (ss === "editorial") {
+          ctx.fillStyle = t.accent;
+          drawRoundRect(ctx, W - pad - Math.round(40 * S), topY + Math.round(10 * S), Math.round(40 * S), Math.round(4 * S), Math.round(2 * S));
+          ctx.fill();
 
-        ctx.fillStyle = t.text;
-        ctx.globalAlpha = 0.25;
-        ctx.font = `700 ${Math.round(32 * S)}px serif`;
-        ctx.textAlign = "left";
-        ctx.textBaseline = "top";
-        ctx.fillText("❞", pad, topY);
-        ctx.globalAlpha = 1;
-        topY += edTopH;
+          ctx.fillStyle = t.text;
+          ctx.globalAlpha = 0.25;
+          ctx.font = `700 ${Math.round(32 * S)}px serif`;
+          ctx.textAlign = "left";
+          ctx.textBaseline = "top";
+          ctx.fillText("❞", pad, topY);
+          ctx.globalAlpha = 1;
+        } else if (ss === "quote") {
+          ctx.fillStyle = t.accent;
+          ctx.save();
+          ctx.globalAlpha = 0.85;
+          ctx.font = `700 ${Math.round(40 * S)}px Georgia, serif`;
+          ctx.textAlign = "right";
+          ctx.textBaseline = "top";
+          ctx.fillText("❝", W - pad, topY - Math.round(2 * S));
+          ctx.restore();
+        }
+        if (ss === "editorial" || ss === "quote") topY += edTopH;
       }
 
       const bottomReserved = pad + edFootH + carFootH;
@@ -1759,48 +1856,76 @@
 
       // 3. Draw Body or Cover
       if (isCarousel && slide.type === "cover") {
-        let cy = topY + Math.max(0, Math.round((availH - coverBlockH) / 2));
+        const cs = state.coverStyle || "classic";
+        const cAlign = cs === "centered" ? "center" : "start";
         const isRtl = state.dir !== "ltr";
+        let cy = topY + Math.max(0, Math.round((availH - coverBlockH) / 2));
 
-        // Accent bar
-        ctx.fillStyle = t.accent;
-        const barW = Math.round(48 * S);
-        const barH = Math.round(6 * S);
-        drawRoundRect(ctx, isRtl ? (W - pad - barW) : pad, cy, barW, barH, Math.round(3 * S));
-        ctx.fill();
-        cy += barH + Math.round(20 * S);
+        if (cs === "classic" || cs === "centered") {
+          ctx.fillStyle = t.accent;
+          const barW = Math.round(48 * S);
+          const barH = Math.round(6 * S);
+          const barX = cs === "centered" ? ((W - barW) / 2) : (isRtl ? (W - pad - barW) : pad);
+          drawRoundRect(ctx, barX, cy, barW, barH, barH / 2);
+          ctx.fill();
+          cy += Math.round(22 * S);
+        }
 
-        // Title
+        const magInset = cs === "magazine" ? Math.round(18 * S) : 0;
+        const cLeft = (cs === "magazine" && !isRtl) ? (pad + magInset) : pad;
+        const cRight = (cs === "magazine" && isRtl) ? (W - pad - magInset) : (W - pad);
+        const textBlockStartY = cy;
+
         ctx.font = `700 ${ctFs}px ${fontFamily}`;
-        drawTextLines(ctx, coverTitleLines, pad, W - pad, cy, ctLinePx, "start", state.dir, t.text, t.accent, ctFs, fontFamily, true);
+        drawTextLines(ctx, coverTitleLines, cLeft, cRight, cy, ctLinePx, cAlign, state.dir, t.text, t.accent, ctFs, fontFamily, true);
         cy += coverTitleLines.length * ctLinePx;
 
-        // Subtitle
+        if (cs === "minimal" && coverSubLines.length) {
+          cy += Math.round(12 * S);
+          ctx.save();
+          ctx.strokeStyle = t.text;
+          ctx.globalAlpha = 0.22;
+          ctx.lineWidth = Math.max(1, Math.round(1 * S));
+          ctx.beginPath();
+          ctx.moveTo(pad, cy);
+          ctx.lineTo(W - pad, cy);
+          ctx.stroke();
+          ctx.restore();
+        }
+
         if (coverSubLines.length) {
           cy += Math.round(16 * S);
           ctx.globalAlpha = 0.8;
           ctx.font = `400 ${csFs}px ${fontFamily}`;
-          drawTextLines(ctx, coverSubLines, pad, W - pad, cy, csLinePx, "start", state.dir, t.text, t.accent, csFs, fontFamily, false);
+          drawTextLines(ctx, coverSubLines, cLeft, cRight, cy, csLinePx, cAlign, state.dir, t.text, t.accent, csFs, fontFamily, false);
           ctx.globalAlpha = 1;
           cy += coverSubLines.length * csLinePx;
         }
 
-        // Author pill
+        if (cs === "magazine") {
+          ctx.fillStyle = t.accent;
+          const stripeW = Math.round(4 * S);
+          const sx = isRtl ? (W - pad - stripeW) : pad;
+          ctx.fillRect(sx, textBlockStartY, stripeW, Math.max(ctLinePx, cy - textBlockStartY));
+        }
+
         if (slide.author) {
           cy += Math.round(22 * S);
           ctx.font = `600 ${Math.round(15 * S)}px ${fontFamily}`;
           const aw = ctx.measureText(slide.author).width + Math.round(28 * S);
-          const ah = Math.round(34 * S);
-          const ax = isRtl ? (W - pad - aw) : pad;
-          ctx.fillStyle = "rgba(29, 155, 240, 0.14)";
+          const ah = Math.round(32 * S);
+          const ax = cs === "centered" ? ((W - aw) / 2) : (isRtl ? (W - pad - aw) : pad);
+          ctx.save();
+          ctx.fillStyle = t.accent;
+          ctx.globalAlpha = 0.13;
           drawRoundRect(ctx, ax, cy, aw, ah, ah / 2);
           ctx.fill();
-
-          ctx.fillStyle = "#1d9bf0";
-          ctx.direction = isRtl ? "rtl" : "ltr";
+          ctx.restore();
+          ctx.fillStyle = t.accent;
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
-          ctx.fillText(slide.author, ax + aw / 2, cy + ah / 2 + 1);
+          ctx.direction = state.dir;
+          ctx.fillText(slide.author, ax + aw / 2, cy + ah / 2);
         }
       } else {
         let by = topY + Math.max(0, Math.round((availH - bodyBlockH) / 2));
@@ -2248,13 +2373,6 @@
     syncInputsFromState();
     renderCard();
     renderHistory();
-  </script>
-  <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./sw.js").catch(() => {});
-      });
-    }
   </script>
 </body>
 </html>
