@@ -180,9 +180,28 @@
         </label>
       </div>
 
-      <!-- Static Profile & Card Details -->
+      <!-- Carousel Cover Instagram Settings (Separate from Single Post) -->
       <div class="pt-4 border-t border-slate-200 space-y-3">
-        <span class="text-xs font-bold text-slate-800 block">تنظیمات ثابت پروفایل و جزئیات X</span>
+        <span class="text-xs font-bold text-slate-800 block">تنظیمات کاور پست بلند (اینستاگرام)</span>
+        <div>
+          <label for="carouselInstaHandleInput" class="text-xs text-slate-600 block mb-1">آیدی اینستاگرام روی کاور</label>
+          <input id="carouselInstaHandleInput" type="text" dir="ltr" class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-sm outline-none focus:border-slate-900" placeholder="@falsafevarz" />
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <label class="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+            <input id="toggleCoverInstaLogo" type="checkbox" class="rounded border-slate-300 text-slate-900 focus:ring-0" />
+            <span>نمایش لوگوی اینستاگرام</span>
+          </label>
+          <label class="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+            <input id="toggleCoverInstaHandle" type="checkbox" class="rounded border-slate-300 text-slate-900 focus:ring-0" />
+            <span>نمایش آیدی اینستاگرام</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Static Profile & Card Details (Single Post) -->
+      <div class="pt-4 border-t border-slate-200 space-y-3">
+        <span class="text-xs font-bold text-slate-800 block">تنظیمات ثابت تک‌پست (پروفایل و X)</span>
         <div class="grid grid-cols-2 gap-2.5">
           <div>
             <label for="nameInput" class="text-xs text-slate-600 block mb-1">نام نمایشی</label>
@@ -492,6 +511,16 @@
             <div id="cardAttribution" class="card-font mt-4" dir="rtl"></div>
           </div>
 
+          <!-- Cover Instagram Badge (Bottom-left right above footer divider, Cover slide only) -->
+          <div id="cardCoverInstaRow" class="hidden flex items-center gap-1.5 pb-0.5 header-font select-none" dir="ltr">
+            <svg id="cardCoverInstaLogo" class="w-[18px] h-[18px] shrink-0 opacity-85" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" ry="5.5"></rect>
+              <circle cx="12" cy="12" r="4.2"></circle>
+              <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"></circle>
+            </svg>
+            <span id="cardCoverInstaHandle" class="text-[14px] font-semibold tracking-tight opacity-85">@falsafevarz</span>
+          </div>
+
           <!-- Carousel Footer (Slide Number + Swipe Prompt + LTR Progress Bar matching Instagram) -->
           <div id="cardCarouselFooter" class="hidden pt-3 mt-2 border-t flex flex-col gap-2" style="border-color: rgba(128,128,128,0.18);" dir="ltr">
             <div class="flex items-center justify-between text-xs sm:text-sm">
@@ -551,6 +580,9 @@
       mode: "single",
       singleStyle: "x",
       coverStyle: "classic",
+      carouselInstaHandle: "@falsafevarz",
+      showCoverInstaLogo: true,
+      showCoverInstaHandle: true,
       name: "Ali Nazari",
       handle: "@falsafevarz",
       avatar: DEFAULT_AVATAR,
@@ -762,6 +794,12 @@
       cardCoverAccent: document.getElementById("cardCoverAccent"),
       cardCoverTextWrap: document.getElementById("cardCoverTextWrap"),
       cardCoverDivider: document.getElementById("cardCoverDivider"),
+      cardCoverInstaRow: document.getElementById("cardCoverInstaRow"),
+      cardCoverInstaLogo: document.getElementById("cardCoverInstaLogo"),
+      cardCoverInstaHandle: document.getElementById("cardCoverInstaHandle"),
+      carouselInstaHandleInput: document.getElementById("carouselInstaHandleInput"),
+      toggleCoverInstaLogo: document.getElementById("toggleCoverInstaLogo"),
+      toggleCoverInstaHandle: document.getElementById("toggleCoverInstaHandle"),
       cardCoverTitle: document.getElementById("cardCoverTitle"),
       cardCoverSubtitle: document.getElementById("cardCoverSubtitle"),
       cardCoverAuthorWrap: document.getElementById("cardCoverAuthorWrap"),
@@ -1339,6 +1377,9 @@
       el.coverSubtitleSizeVal.textContent = `${state.coverSubtitleSize || 18}px`;
       el.nameInput.value = state.name;
       el.handleInput.value = state.handle;
+      el.carouselInstaHandleInput.value = state.carouselInstaHandle || "@falsafevarz";
+      el.toggleCoverInstaLogo.checked = state.showCoverInstaLogo !== false;
+      el.toggleCoverInstaHandle.checked = state.showCoverInstaHandle !== false;
       el.toggleXLogo.checked = state.showXLogo;
       el.toggleTranslation.checked = state.showTranslation;
       el.toggleVerified.checked = state.showVerified;
@@ -1497,7 +1538,16 @@
             el.cardCoverTextWrap.style.borderInlineStart = "none";
             el.cardCoverTextWrap.style.paddingInlineStart = "0px";
           }
+
+          const showIgLogo = state.showCoverInstaLogo !== false;
+          const igHandleStr = (state.carouselInstaHandle || "").trim();
+          const showIgHandle = state.showCoverInstaHandle !== false && igHandleStr.length > 0;
+          el.cardCoverInstaRow.classList.toggle("hidden", !(showIgLogo || showIgHandle));
+          el.cardCoverInstaLogo.classList.toggle("hidden", !showIgLogo);
+          el.cardCoverInstaHandle.classList.toggle("hidden", !showIgHandle);
+          el.cardCoverInstaHandle.textContent = igHandleStr;
         } else {
+          el.cardCoverInstaRow.classList.add("hidden");
           el.cardCoverHero.classList.add("hidden");
           el.cardBodyWrapper.classList.remove("hidden");
           el.cardBodyWrapper.style.paddingBottom = "12px";
@@ -1534,6 +1584,7 @@
         el.cardEditorialName.textContent = (ss === "minimal") ? "" : (state.name || "Ali Nazari");
 
         el.cardCoverHero.classList.add("hidden");
+        el.cardCoverInstaRow.classList.add("hidden");
         el.cardCarouselTitleBar.classList.add("hidden");
         el.cardCarouselFooter.classList.add("hidden");
         el.cardBodyWrapper.classList.remove("hidden");
@@ -2154,6 +2205,45 @@
         const num = state.currentSlideIdx + 1;
         const fy = H - pad - Math.round(48 * S);
 
+        // 5a. Cover Slide bottom-left Instagram Logo + Handle (right above footer divider)
+        if (slide.type === "cover") {
+          const showIgLogo = state.showCoverInstaLogo !== false;
+          const igHandleStr = (state.carouselInstaHandle || "").trim();
+          const showIgHandle = state.showCoverInstaHandle !== false && igHandleStr.length > 0;
+          if (showIgLogo || showIgHandle) {
+            const igSize = Math.round(18 * S);
+            const igCenterY = fy - Math.round(16 * S);
+            let curX = pad;
+            ctx.save();
+            ctx.globalAlpha = 0.85;
+            if (showIgLogo) {
+              const ix = curX;
+              const iy = igCenterY - igSize / 2;
+              ctx.strokeStyle = t.text;
+              ctx.lineWidth = Math.max(2, Math.round(1.9 * S));
+              drawRoundRect(ctx, ix + Math.round(1.5 * S), iy + Math.round(1.5 * S), igSize - Math.round(3 * S), igSize - Math.round(3 * S), Math.round(4.5 * S));
+              ctx.stroke();
+              ctx.beginPath();
+              ctx.arc(ix + igSize / 2, iy + igSize / 2, Math.round(3.6 * S), 0, Math.PI * 2);
+              ctx.stroke();
+              ctx.fillStyle = t.text;
+              ctx.beginPath();
+              ctx.arc(ix + igSize * 0.74, iy + igSize * 0.26, Math.max(1.5, Math.round(1.1 * S)), 0, Math.PI * 2);
+              ctx.fill();
+              curX += igSize + Math.round(6 * S);
+            }
+            if (showIgHandle) {
+              ctx.fillStyle = t.text;
+              ctx.font = `600 ${Math.round(14 * S)}px ${headerFont}`;
+              ctx.direction = "ltr";
+              ctx.textAlign = "left";
+              ctx.textBaseline = "middle";
+              ctx.fillText(igHandleStr, curX, igCenterY + Math.round(0.5 * S));
+            }
+            ctx.restore();
+          }
+        }
+
         ctx.strokeStyle = "rgba(128, 128, 128, 0.2)";
         ctx.lineWidth = Math.round(1 * S);
         ctx.beginPath();
@@ -2400,6 +2490,9 @@
 
     el.nameInput.addEventListener("input", (e) => { state.name = e.target.value; renderCard(); });
     el.handleInput.addEventListener("input", (e) => { state.handle = e.target.value; renderCard(); });
+    el.carouselInstaHandleInput.addEventListener("input", (e) => { state.carouselInstaHandle = e.target.value; renderCard(); });
+    el.toggleCoverInstaLogo.addEventListener("change", (e) => { state.showCoverInstaLogo = e.target.checked; renderCard(); });
+    el.toggleCoverInstaHandle.addEventListener("change", (e) => { state.showCoverInstaHandle = e.target.checked; renderCard(); });
     el.fontSizeRange.addEventListener("input", (e) => { state.fontSize = Number(e.target.value); renderCard(); });
     el.lineHeightRange.addEventListener("input", (e) => { state.lineHeight = Number(e.target.value); renderCard(); });
     el.paddingRange.addEventListener("input", (e) => { state.padding = Number(e.target.value); renderCard(); });
