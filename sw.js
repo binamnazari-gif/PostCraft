@@ -1,4 +1,4 @@
-const CACHE_NAME = "card-studio-pwa-v1";
+const CACHE_NAME = "card-studio-pwa-v4";
 const CORE_ASSETS = [
   "./",
   "./index.html",
@@ -9,7 +9,15 @@ const CORE_ASSETS = [
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS))
+    caches.open(CACHE_NAME).then((cache) =>
+      Promise.all(
+        CORE_ASSETS.map((url) =>
+          fetch(url, { cache: "no-cache" })
+            .then((res) => (res && res.ok ? cache.put(url, res) : null))
+            .catch(() => null)
+        )
+      )
+    )
   );
   self.skipWaiting();
 });
@@ -30,7 +38,7 @@ self.addEventListener("fetch", (event) => {
 
   if (isHtml) {
     event.respondWith(
-      fetch(req)
+      fetch(req, { cache: "no-cache" })
         .then((res) => {
           const copy = res.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));

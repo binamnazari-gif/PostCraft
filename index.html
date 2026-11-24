@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PostCraft — استودیو کارت پست</title>
+    <title>Post Craft</title>
   <link rel="manifest" href="./manifest.json" />
   <meta name="theme-color" content="#0f172a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="PostCraft" />
+  <meta name="apple-mobile-web-app-title" content="Post Craft" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
   <link rel="icon" type="image/png" href="./icon-192.png" />
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -1772,7 +1772,7 @@
         // Pass 1: draw one continuous highlight pill per contiguous run of highlighted words
         const padX = 6;
         const hlY = y - 2;
-        const hlH = baseFs * 1.35;
+        const hlH = Math.min(baseFs * 1.35, Math.max(baseFs * 1.12, linePx - Math.max(4, Math.round(baseFs * 0.1))));
         ctx.fillStyle = `${accentColor}26`;
         let j = 0;
         while (j < words.length) {
@@ -2702,7 +2702,17 @@
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./sw.js").catch(() => {});
+        const hadController = !!navigator.serviceWorker.controller;
+        let reloaded = false;
+        navigator.serviceWorker.addEventListener("controllerchange", () => {
+          if (hadController && !reloaded) {
+            reloaded = true;
+            window.location.reload();
+          }
+        });
+        navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" })
+          .then((reg) => reg.update().catch(() => {}))
+          .catch(() => {});
       });
     }
   </script>

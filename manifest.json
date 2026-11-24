@@ -1,6 +1,6 @@
 {
-  "name": "استودیو کارت پست اینستاگرام",
-  "short_name": "کارت‌ساز",
+  "name": "Post Craft",
+  "short_name": "Post Craft",
   "description": "ساخت کارت تک‌پست و کاروسل اینستاگرام",
   "start_url": "./",
   "scope": "./",
