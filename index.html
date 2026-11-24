@@ -304,6 +304,10 @@
             <label for="coverSubtitleSizeRange" class="text-[11px] font-semibold text-slate-600 shrink-0">اندازه زیرعنوان: <span id="coverSubtitleSizeVal" class="text-slate-900">18px</span></label>
             <input id="coverSubtitleSizeRange" type="range" min="13" max="28" step="1" class="w-full h-1.5 bg-slate-200 rounded-lg cursor-pointer" />
           </div>
+          <div class="flex items-center justify-between gap-2 sm:col-span-2">
+            <label for="coverAuthorSizeRange" class="text-[11px] font-semibold text-slate-600 shrink-0">اندازه نویسنده: <span id="coverAuthorSizeVal" class="text-slate-900">15px</span></label>
+            <input id="coverAuthorSizeRange" type="range" min="11" max="24" step="1" class="w-full h-1.5 bg-slate-200 rounded-lg cursor-pointer" />
+          </div>
         </div>
           </div>
         </div>
@@ -595,6 +599,7 @@
       hasCoverSlide: true,
       coverTitleSize: 32,
       coverSubtitleSize: 18,
+      coverAuthorSize: 15,
       splitMode: "target",
       targetSlides: 6,
       charsPerSlide: 340,
@@ -738,6 +743,8 @@
       coverTitleSizeVal: document.getElementById("coverTitleSizeVal"),
       coverSubtitleSizeRange: document.getElementById("coverSubtitleSizeRange"),
       coverSubtitleSizeVal: document.getElementById("coverSubtitleSizeVal"),
+      coverAuthorSizeRange: document.getElementById("coverAuthorSizeRange"),
+      coverAuthorSizeVal: document.getElementById("coverAuthorSizeVal"),
       carouselNavBar: document.getElementById("carouselNavBar"),
       prevSlideBtn: document.getElementById("prevSlideBtn"),
       nextSlideBtn: document.getElementById("nextSlideBtn"),
@@ -888,6 +895,7 @@
           hasCoverSlide: state.hasCoverSlide,
           coverTitleSize: state.coverTitleSize,
           coverSubtitleSize: state.coverSubtitleSize,
+          coverAuthorSize: state.coverAuthorSize,
           splitMode: state.splitMode,
           targetSlides: state.targetSlides,
           charsPerSlide: state.charsPerSlide,
@@ -1375,6 +1383,8 @@
       el.coverTitleSizeVal.textContent = `${state.coverTitleSize || 32}px`;
       el.coverSubtitleSizeRange.value = state.coverSubtitleSize || 18;
       el.coverSubtitleSizeVal.textContent = `${state.coverSubtitleSize || 18}px`;
+      el.coverAuthorSizeRange.value = state.coverAuthorSize || 15;
+      el.coverAuthorSizeVal.textContent = `${state.coverAuthorSize || 15}px`;
       el.nameInput.value = state.name;
       el.handleInput.value = state.handle;
       el.carouselInstaHandleInput.value = state.carouselInstaHandle || "@falsafevarz";
@@ -1517,6 +1527,7 @@
           el.cardCoverSubtitle.setAttribute("dir", state.dir);
           el.cardCoverAuthorWrap.classList.toggle("hidden", !slide.author);
           el.cardCoverAuthor.textContent = slide.author;
+          el.cardCoverAuthor.style.fontSize = `${state.coverAuthorSize || 15}px`;
           el.cardCoverAuthor.style.backgroundColor = `${t.accent}1f`;
           el.cardCoverAuthor.style.color = t.accent;
           el.cardCoverAccent.style.backgroundColor = t.accent;
@@ -2145,9 +2156,10 @@
 
         if (slide.author) {
           cy += Math.round(22 * S);
-          ctx.font = `600 ${Math.round(15 * S)}px ${fontFamily}`;
+          const caFs = Math.round((state.coverAuthorSize || 15) * S);
+          ctx.font = `600 ${caFs}px ${fontFamily}`;
           const aw = ctx.measureText(slide.author).width + Math.round(28 * S);
-          const ah = Math.round(32 * S);
+          const ah = Math.round(caFs * 2.1);
           const ax = cs === "centered" ? ((W - aw) / 2) : (isRtl ? (W - pad - aw) : pad);
           ctx.save();
           ctx.fillStyle = t.accent;
@@ -2466,6 +2478,11 @@
     el.coverSubtitleSizeRange.addEventListener("input", (e) => {
       state.coverSubtitleSize = Number(e.target.value);
       el.coverSubtitleSizeVal.textContent = `${state.coverSubtitleSize}px`;
+      scheduleRender();
+    });
+    el.coverAuthorSizeRange.addEventListener("input", (e) => {
+      state.coverAuthorSize = Number(e.target.value);
+      el.coverAuthorSizeVal.textContent = `${state.coverAuthorSize}px`;
       scheduleRender();
     });
     el.carouselSubtitleInput.addEventListener("input", (e) => {
