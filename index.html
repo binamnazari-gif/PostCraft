@@ -1758,6 +1758,48 @@
       const maxWidth = xRight - xLeft;
       const isRtl = dir !== "ltr";
 
+      function drawWordRun(words, wordWidths, startX, stepGap, y) {
+        const wordPos = [];
+        let curX = startX;
+        for (let j = 0; j < words.length; j++) {
+          const ww = wordWidths[j];
+          const left = isRtl ? (curX - ww) : curX;
+          const right = isRtl ? curX : (curX + ww);
+          wordPos.push({ drawX: curX, left, right });
+          curX = isRtl ? (curX - ww - stepGap) : (curX + ww + stepGap);
+        }
+
+        // Pass 1: draw one continuous highlight pill per contiguous run of highlighted words
+        const padX = 6;
+        const hlY = y - 2;
+        const hlH = baseFs * 1.35;
+        ctx.fillStyle = `${accentColor}26`;
+        let j = 0;
+        while (j < words.length) {
+          if (!words[j].highlight) {
+            j++;
+            continue;
+          }
+          let end = j;
+          while (end + 1 < words.length && words[end + 1].highlight) {
+            end++;
+          }
+          const runLeft = Math.min(wordPos[j].left, wordPos[end].left) - padX;
+          const runRight = Math.max(wordPos[j].right, wordPos[end].right) + padX;
+          drawRoundRect(ctx, runLeft, hlY, runRight - runLeft, hlH, 6);
+          ctx.fill();
+          j = end + 1;
+        }
+
+        // Pass 2: draw words cleanly above highlight backgrounds
+        for (let k = 0; k < words.length; k++) {
+          const w = words[k];
+          ctx.fillStyle = w.highlight ? accentColor : color;
+          ctx.font = `${w.italic ? "italic " : ""}${(forceBold || w.bold) ? 700 : 400} ${baseFs}px ${fontFamily}`;
+          ctx.fillText(w.text, wordPos[k].drawX, y);
+        }
+      }
+
       const quoteIndent = Math.round(baseFs * 0.95);
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
@@ -1777,23 +1819,8 @@
           const totalWordsW = wordWidths.reduce((a, b) => a + b, 0);
           const gap = Math.max(4, (lMaxW - totalWordsW) / (line.words.length - 1));
           ctx.direction = isRtl ? "rtl" : "ltr";
-          let curX = isRtl ? lXRight : lXLeft;
           ctx.textAlign = isRtl ? "right" : "left";
-
-          for (let j = 0; j < line.words.length; j++) {
-            const w = line.words[j];
-            if (w.highlight) {
-              const padX = 6;
-              const boxX = isRtl ? (curX - wordWidths[j] - padX) : (curX - padX);
-              ctx.fillStyle = `${accentColor}26`;
-              drawRoundRect(ctx, boxX, y - 2, wordWidths[j] + padX * 2, baseFs * 1.35, 6);
-              ctx.fill();
-            }
-            ctx.fillStyle = w.highlight ? accentColor : color;
-            ctx.font = `${w.italic ? "italic " : ""}${(forceBold || w.bold) ? 700 : 400} ${baseFs}px ${fontFamily}`;
-            ctx.fillText(w.text, curX, y);
-            curX = isRtl ? (curX - wordWidths[j] - gap) : (curX + wordWidths[j] + gap);
-          }
+          drawWordRun(line.words, wordWidths, isRtl ? lXRight : lXLeft, gap, y);
         } else if (!hasRich) {
           ctx.fillStyle = color;
           ctx.font = `${line.isQuote ? "italic " : ""}${forceBold ? 700 : 400} ${baseFs}px ${fontFamily}`;
@@ -1817,27 +1844,13 @@
 
           ctx.direction = isRtl ? "rtl" : "ltr";
           ctx.textAlign = isRtl ? "right" : "left";
-          let curX;
+          let startX;
           if (align === "center") {
-            curX = isRtl ? ((lXLeft + lXRight) / 2 + totalLineW / 2) : ((lXLeft + lXRight) / 2 - totalLineW / 2);
+            startX = isRtl ? ((lXLeft + lXRight) / 2 + totalLineW / 2) : ((lXLeft + lXRight) / 2 - totalLineW / 2);
           } else {
-            curX = isRtl ? lXRight : lXLeft;
+            startX = isRtl ? lXRight : lXLeft;
           }
-
-          for (let j = 0; j < line.words.length; j++) {
-            const w = line.words[j];
-            if (w.highlight) {
-              const padX = 6;
-              const boxX = isRtl ? (curX - wordWidths[j] - padX) : (curX - padX);
-              ctx.fillStyle = `${accentColor}26`;
-              drawRoundRect(ctx, boxX, y - 2, wordWidths[j] + padX * 2, baseFs * 1.35, 6);
-              ctx.fill();
-            }
-            ctx.fillStyle = w.highlight ? accentColor : color;
-            ctx.font = `${w.italic ? "italic " : ""}${(forceBold || w.bold) ? 700 : 400} ${baseFs}px ${fontFamily}`;
-            ctx.fillText(w.text, curX, y);
-            curX = isRtl ? (curX - wordWidths[j] - spaceW) : (curX + wordWidths[j] + spaceW);
-          }
+          drawWordRun(line.words, wordWidths, startX, spaceW, y);
         }
       }
     }
