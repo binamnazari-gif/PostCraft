@@ -3,7 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>قالب پست X برای اینستاگرام — Ali Nazari</title>
+    <title>PostCraft — استودیو کارت پست</title>
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="PostCraft" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+  <link rel="icon" type="image/png" href="./icon-192.png" />
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
@@ -1023,19 +1030,48 @@
     }
 
     function editorToMarkup(root) {
+      let out = "";
+      let pendingBlockBreak = false;
+
+      function emitText(txt, flags) {
+        if (!txt) return;
+        if (pendingBlockBreak) {
+          if (out && !out.endsWith("\n")) out += "\n";
+          pendingBlockBreak = false;
+        }
+        // Preserve leading/trailing spaces & newlines outside formatting markers
+        const m = txt.match(/^([\s\n]*)([\s\S]*?)([\s\n]*)$/);
+        const lead = m ? m[1] : "";
+        const core = m ? m[2] : txt;
+        const trail = m ? m[3] : "";
+        if (!core) {
+          out += txt;
+          return;
+        }
+        let formatted = core;
+        if (flags.hl) formatted = `==${core}==`;
+        else if (flags.bold && flags.italic) formatted = `**_${core}_**`;
+        else if (flags.bold) formatted = `**${core}**`;
+        else if (flags.italic) formatted = `_${core}_`;
+        out += lead + formatted + trail;
+      }
+
       function walk(node, flags) {
         if (node.nodeType === 3) {
-          let txt = node.nodeValue || "";
-          if (!txt) return "";
-          if (flags.hl) return `==${txt}==`;
-          if (flags.bold && flags.italic) return `**_${txt}_**`;
-          if (flags.bold) return `**${txt}**`;
-          if (flags.italic) return `_${txt}_`;
-          return txt;
+          emitText(node.nodeValue || "", flags);
+          return;
         }
-        if (node.nodeType !== 1) return "";
+        if (node.nodeType !== 1) return;
         const tag = node.tagName.toLowerCase();
-        if (tag === "br") return "\n";
+
+        if (tag === "br") {
+          if (pendingBlockBreak) {
+            if (out && !out.endsWith("\n")) out += "\n";
+            pendingBlockBreak = false;
+          }
+          out += "\n";
+          return;
+        }
 
         const nextFlags = {
           bold: flags.bold || tag === "b" || tag === "strong" || (node.style && Number(node.style.fontWeight) >= 600),
@@ -1043,29 +1079,53 @@
           hl: flags.hl || node.hasAttribute("data-hl") || tag === "mark"
         };
 
-        let inner = "";
+        const isBlock = (tag === "div" || tag === "p" || tag === "li" || tag === "blockquote");
+        if (isBlock && node !== root) {
+          if (out.length > 0 && !out.endsWith("\n")) {
+            out += "\n";
+          } else if (pendingBlockBreak) {
+            out += "\n";
+          }
+          pendingBlockBreak = false;
+
+          // Check if block is purely an empty line (e.g. <div><br></div>)
+          const isSingleBr = node.childNodes.length === 1 && node.firstChild.nodeType === 1 && node.firstChild.tagName.toLowerCase() === "br";
+          if (isSingleBr) {
+            out += "\n";
+            pendingBlockBreak = false;
+            return;
+          }
+
+          if (tag === "blockquote") {
+            const beforeLen = out.length;
+            for (const child of node.childNodes) walk(child, nextFlags);
+            const blockContent = out.slice(beforeLen).replace(/\n+$/, "");
+            const qLines = blockContent.split("\n").map(l => `> ${l}`).join("\n");
+            out = out.slice(0, beforeLen) + qLines;
+            pendingBlockBreak = true;
+            return;
+          }
+
+          const children = Array.from(node.childNodes);
+          // Ignore single browser-inserted trailing placeholder <br> at the end of a non-empty block
+          const lastIsPlaceholderBr = children.length > 1 &&
+            children[children.length - 1].nodeType === 1 &&
+            children[children.length - 1].tagName.toLowerCase() === "br";
+          const limit = lastIsPlaceholderBr ? children.length - 1 : children.length;
+          for (let i = 0; i < limit; i++) {
+            walk(children[i], nextFlags);
+          }
+          pendingBlockBreak = true;
+          return;
+        }
+
         for (const child of node.childNodes) {
-          inner += walk(child, nextFlags);
+          walk(child, nextFlags);
         }
-        if (tag === "blockquote") {
-          const qLines = inner.replace(/^\n+|\n+$/g, "").split("\n").map(l => `> ${l}`).join("\n");
-          const prevEndsNl = node.previousSibling && (node.previousSibling.nodeType === 1 ? /div|p|br/i.test(node.previousSibling.tagName) : (node.previousSibling.nodeValue || "").endsWith("\n"));
-          return (node.previousSibling && !prevEndsNl ? "\n" : "") + qLines + (node.nextSibling ? "\n" : "");
-        }
-        if ((tag === "div" || tag === "p") && inner && !inner.endsWith("\n")) {
-          // Block elements created by Enter in contenteditable
-          return (node.previousSibling ? "\n" : "") + inner;
-        }
-        if ((tag === "div" || tag === "p") && !inner && node.previousSibling) {
-          return "\n";
-        }
-        return inner;
       }
 
-      let out = walk(root, { bold: false, italic: false, hl: false });
-      // Merge adjacent same-marker spans like **foo** **bar**? Keep clean!
-      out = out.replace(/\u00a0/g, " ");
-      return out;
+      walk(root, { bold: false, italic: false, hl: false });
+      return out.replace(/\u00a0/g, " ");
     }
 
     function parseFormattedTokens(text) {
@@ -1148,10 +1208,10 @@
       const contentW = W - pad * 2;
       const fs = Math.round(state.fontSize * S);
       const linePx = Math.round(fs * state.lineHeight);
-      const carFootH = Math.round(62 * S);
+      const carFootH = Math.round(76 * S);
       const rMap = { "4:5": 5 / 4, "1:1": 1, "9:16": 16 / 9 };
       const H = Math.round(W * (rMap[state.ratio] || 1.25));
-      const availH = H - (pad * 2 + carFootH) - Math.round(32 * S);
+      const availH = H - (pad * 2 + carFootH) - Math.round(48 * S);
       const maxLines = Math.max(2, Math.floor(availH / linePx));
 
       const mCtx = getMeasureCtx();
@@ -1193,11 +1253,11 @@
           continue;
         }
 
-        // Fast upper-bound estimate before exact check (only check exact when near maxLines)
-        const extraLines = u.breakBefore === "\n\n" ? (uLines + 1) : (u.breakBefore === "\n" ? uLines : Math.max(0, uLines - 1));
-        if (currentLines + extraLines <= maxLines - 1) {
+        // True safe upper-bound: worst case adds uLines + 1 (never under-count!)
+        const worstExtra = u.breakBefore === "\n\n" ? (uLines + 2) : (uLines + 1);
+        if (currentLines + worstExtra <= maxLines) {
           current += u.breakBefore + u.text;
-          currentLines += extraLines;
+          currentLines += worstExtra;
           continue;
         }
 
@@ -1440,6 +1500,7 @@
         } else {
           el.cardCoverHero.classList.add("hidden");
           el.cardBodyWrapper.classList.remove("hidden");
+          el.cardBodyWrapper.style.paddingBottom = "12px";
 
           el.cardCarouselTitleBar.classList.add("hidden");
 
@@ -1763,7 +1824,7 @@
       const transH = (isX && state.showTranslation) ? Math.round(36 * S) : 0;
       const edTopH = (isEditorial && (ss === "editorial" || ss === "quote")) ? Math.round(46 * S) : 0;
       const edFootH = isEditorial ? Math.round(46 * S) : 0;
-      const carFootH = isCarousel ? Math.round(62 * S) : 0;
+      const carFootH = isCarousel ? Math.round(76 * S) : 0;
 
       let bodyLines = [];
       let attrText = (!isCarousel && state.attribution.trim()) ? state.attribution.trim() : "";
@@ -2514,6 +2575,13 @@
     syncInputsFromState();
     renderCard();
     renderHistory();
+  </script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch(() => {});
+      });
+    }
   </script>
 </body>
 </html>
